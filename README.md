@@ -136,6 +136,7 @@ memory -- set the amount of memory (in megabytes) this box will consume
 cpus -- set the number of cpus this box will use
 hostname -- hostname to set on the box
 networks -- custom networks to use in addition to the management network
+disk_size -- specify the size (in gigabytes) of the box's virtual disk. This only sets the virtual disk size, so you will still need to resize partitions and filesystems manually.
 ```
 
 Entirely new boxes can be created that do not orginate from a box defined within the Vagrantfile. For example, if you had access to a RHEL Vagrant box:
@@ -165,6 +166,8 @@ static:
 #### Ansible
 
 Boxes can be further customized by declaring Ansible playbooks to be run during provisioning. One or more playbooks can be specified and will be executed sequentially. An ignored directory can be used to put playbooks into 'user_playbooks' without worrying about adding them during a git commit.
+
+Ansible roles may also be installed directly using the [`ansible-galaxy` command](http://docs.ansible.com/ansible/galaxy.html#the-ansible-galaxy-command-line-tool). These roles will be installed at `playbooks/galaxy_roles` and will be ignored by git. You may also specify roles in a `requirements.yml`, which you can use to install all desired roles with `ansible-galaxy install -r requirements.yml`
 
 ```
 ansible:
