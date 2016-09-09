@@ -5,9 +5,8 @@
     capsule_server_group: "server-{{ inventory_hostname }}"
     capsule_server: "{{ groups[capsule_server_group][0] }}"
   roles:
-    - etc_hosts
-    - epel_repositories
-    - puppet_repositories
     - foreman_repositories
     - katello_repositories
-    - capsule
+    - etc_hosts
+    - {role: capsule, foreman_directory: '/home/vagrant/foreman/config/', 
+       devel: True, base_foreman_directory: '/home/vagrant/foreman/'}
