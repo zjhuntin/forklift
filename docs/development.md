@@ -7,6 +7,7 @@ This covers how to setup and configure a development environment using the Forkl
  * [Test Puppet Module Pull Requests](#testing-module-pull-requests)
  * [Jenkins Job Builder](#jenkins-job-builder-development)
  * [Redmine Development](#redmine-development)
+ * [Hammer Development](#hammer-development)
 
 ## Development Environment Deployment
 
@@ -67,6 +68,31 @@ koji:
   options: --koji-task 214567,879567
 ```
 
+An Ansible role is provided that can setup and configure a Koji scratch build for testing. If you had an existing playbook such as:
+
+```
+- hosts: server
+  roles:
+    - etc_hosts
+    - foreman_repositories
+    - katello_repositories
+    - katello
+```
+
+The Koji role and task ID variable can be added to download and configure a repository with priority:
+
+```
+- hosts: server
+  vars:
+    koji_task_id: 321231
+  roles:
+    - etc_hosts
+    - koji
+    - foreman_repositories
+    - katello_repositories
+    - katello
+```
+
 ## Testing Module Pull Requests
 
 The setup.rb script supports specifying any number of modules and associated pull requests for testing. For example, if a module under goes a refactoring, and you want to test that it continues to work with the installer. You'll need the name of the module and the pull request number you want to test. Note that the name in this situation is the name as laid down in the module directory as opposed to the github repository name. In other words, use 'qpid' not 'puppet-qpid'. Formatting requires the module name followed by a '/' and then the pull request number. See examples below.
@@ -124,3 +150,21 @@ Assuming you have a clone of the Redmine repository somewhere locally, edit the 
 ```
 docker-compose up redmine
 ```
+
+## Hammer Development
+
+Hammer is the command line interface (CLI) to Foreman and Katello. It supports plugins
+such as [Foreman Tasks](https://github.com/theforeman/hammer-cli-foreman-tasks) and
+importing/exporting data via [CSV](https://github.com/Katello/hammer-cli-csv).
+The CLI can be configured to work with any version of Foreman. To facilitate
+development in Hammer or any of its plugins, a lightweight vagrant box is
+provided in this repository:
+
+```sh
+vagrant up centos7-hammer-devel
+```
+
+In the vagrant box, find the Hammer repositories at `/home/vagrant/` and the
+configuration at `/home/vagrant/.hammer`. Specifically, to change the Foreman
+instance Hammer points to, update
+`/home/vagrant/.hammer/cli.modules.d/foreman.yml`.
