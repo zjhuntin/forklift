@@ -1,0 +1,5 @@
+---
+- name: "Copy results"
+  fetch:
+    src: {{ bats_output_dir }}
+    dest: ./

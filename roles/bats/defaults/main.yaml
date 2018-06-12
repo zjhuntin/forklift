@@ -1,4 +1,5 @@
 ---
+bats_copy_results: true
 bats_environment: {}
 bats_git_dir: "/root/bats"
 bats_forklift_dir: "/root/forklift"

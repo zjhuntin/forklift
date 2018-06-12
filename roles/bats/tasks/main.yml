@@ -67,3 +67,6 @@
       when: item.rc != 0
       with_items: "{{ test_output.results }}"
   when: bats_run
+
+  - include_tasks: 'bats_copy_results.yml'
+    when: bats_copy_results
