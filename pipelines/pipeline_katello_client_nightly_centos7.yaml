@@ -1,0 +1,61 @@
+- hosts: localhost
+  vars:
+    forklift_name: pipeline-katello-client-testing
+    forklift_boxes:
+      pipeline-katello-server-centos7:
+        box: centos7
+        memory: 8192
+  roles:
+    - forklift
+
+- hosts: localhost
+  tasks:
+    - name: Get client container running
+      docker_container:
+        name: pipeline-katello-client-centos7
+        image: zhunting/centos7_client
+        ports:
+          - 80:80
+        network_mode: host
+        command: ['sleep', 'infinity']
+    - name: add the client to the Ansible inventory
+      add_host:
+        name: simple_container
+        ansible_connection: docker
+        ansible_user: root
+
+- hosts: pipeline-katello-server-centos7
+  become: yes
+  vars:
+    katello_repositories_version: nightly
+    foreman_repositories_version: nightly
+    katello_repositories_environment: staging
+    foreman_repositories_environment: staging
+    foreman_installer_skip_installer: true
+    foreman_installer_additional_packages:
+      - foreman-installer-katello
+  roles:
+    - umask
+    - selinux
+    - etc_hosts
+    - epel_repositories
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
+    - disable_firewall
+    - haveged
+    - update_os_packages
+    - foreman_installer
+
+- hosts: pipeline-katello-server-centos7
+  become: yes
+  vars:
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+      - "--foreman-admin-password {{ foreman_installer_admin_password }}"
+    foreman_installer_additional_packages:
+      - katello
+  roles:
+    - disable_ipv6
+    - foreman_installer

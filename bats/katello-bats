@@ -9,6 +9,7 @@ Usage: $0 [options]
       content     Run content tests (yum + puppet)
       proxy       Run proxy tests (requires content)
       virt-whom   Run virt-whom candlepin tests
+      client      Run client tests
 EOF
 }
 
@@ -29,6 +30,9 @@ for arg do
       proxy)
         katello_proxy=true
         ;;
+      client)
+        katello_client=true
+        ;;
    esac
 done
 
@@ -48,6 +52,12 @@ fi
 if [ "$katello_virt_whom" == true ];
 then
     BATS_ARGS="$BATS_ARGS fb-virt-whom.bats"
+fi
+
+# Must be run on a client
+if [ "$katello_client" == true ];
+then
+  BATS_ARGS="$BATS_ARGS fb-client-katello.bats"
 fi
 
 cd /opt/bats

@@ -30,3 +30,10 @@ boxes:
     scenarios:
       - foreman
       - katello
+  fedora29:
+    box_name: 'fedora29-nightly'
+    memory:   2048
+    default:  true
+    pty:      true
+    libvirt: https://kojipkgs.fedoraproject.org/compose/branched/latest-Fedora-29/compose/Cloud/x86_64/images/Fedora-Cloud-Base-Vagrant-29-20180923.n.0.x86_64.vagrant-libvirt.box
+
